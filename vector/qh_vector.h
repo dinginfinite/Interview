@@ -18,11 +18,11 @@ namespace qh
 
         explicit vector( size_t n, const T& value = T())
         {
-			rsize_ = n << 2;
+			rsize_ = n << 1;
             data_ = new T[rsize_];
             for (size_t i = 0; i < n; i++)
             {
-                data_[0] = value;
+                data_[i] = value;
             }
 			size_ = n;		// assignment after successfully new to provide exception safe
         }
@@ -32,7 +32,7 @@ namespace qh
 		vector(const vector<T> &other) {
 			data_ = new T[other.rsize_];
 
-			for (size_t i = 0; i < data_;++i)
+			for (size_t i = 0; i < other.size(); ++i)
 				data_[i] = other.data_[i];
 			size_ = other.size_;
 			rsize_ = other.rsize_;
@@ -68,7 +68,7 @@ namespace qh
         void push_back(const T& element);
         void pop_back();
         void resize(size_t sz);
-        void reserve();
+        void reserve(size_t sz);
         void clear();
         bool empty();
 
@@ -95,7 +95,7 @@ namespace qh
 	template <typename T>
 	inline void vector<T>::reallocate(size_t i) {
 		T *tdata = new T[i];
-		memcpy(tarr, data_, size_ * sizeof(T));
+		memcpy(tdata, data_, size_ * sizeof(T));
 		delete [] data_;
 		data_ = tdata;
 		rsize_ = i;
@@ -108,7 +108,8 @@ namespace qh
 	 *
 	 * @param index - index to access
 	 */
-	T& operator[](size_t index) {
+	template<typename T>
+	T& vector<T>::operator[](size_t index) {
 		return data_[index];
 	}
 
@@ -132,7 +133,7 @@ namespace qh
 	template<typename T>
 	void vector<T>::pop_back() {
 		--size_;
-		data[size_].~T();
+		data_[size_].~T();
 	}
 
 	/**
@@ -143,8 +144,7 @@ namespace qh
 	template<typename T>
 	void vector<T>::resize(size_t sz) {
 		if (sz > rsize_) {
-			reallocate(i);
-			rsize_ = i;
+			reallocate(sz);
 		} else if (sz < size_) {
 			for (size_t i = sz; i < size_; ++i)
 				data_[i].~T();
@@ -153,15 +153,12 @@ namespace qh
 	}
 
 	/**
-	 * Reverse the vector
+	 * Increase the capacity of vector
 	 */
 	template<typename T>
-	void vector<T>::reverse() {
-		using std::swap;
-		size_t left = 0, right = size_ - 1;
-
-		while (left < right)
-			swap(data_[left++], data_[right--]);
+	void vector<T>::reserve(size_t sz) {
+		if (sz > rsize_)
+			reallocate(sz);
 	}
 
 	/**
@@ -171,6 +168,7 @@ namespace qh
 	void vector<T>::clear() {
 		for (size_t i = 0; i < size_; ++i)
 			data_[i].~T();
+		size_ = 0;
 	}
 
 	/**

@@ -1,4 +1,3 @@
-# weizili@360.cn 
 
 CC=gcc
 CXX=g++
@@ -24,5 +23,3 @@ $(TARGET) : $(OBJS)
 %.o : %.cc
 	$(CXX) $(CFLAGS) $(CPPFLAGS) $< -o $@
 
-clean:
-rm -rf *.o *.d $(OBJS) $(DEPS) $(TARGET)
