@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <iostream>
 
 void test1()
 {
@@ -71,6 +72,19 @@ void test4() {
 
   const std::string& c = parser.Get("c", NULL);
   assert(c == "3");
+
+  assert(parser.Get("section1", "a", NULL) == "22");
+  assert(parser.Get("section1", "b", NULL) == "2345 ");
+  assert(parser.Get("section1", "c", NULL) == " \"str\"");
+  assert(parser.Get("section1", "d", NULL) == "4321");
+  assert(parser.Get("section2", "a", NULL) == ";");
+  assert(parser.Get("section2", "b", NULL) == ";");
+  assert(parser.Get("section3", "s1", NULL) == "'");
+  assert(parser.Get("section3", "s2", NULL) == "");
+  assert(parser.Get("section3", "s3", NULL) == "'");
+  assert(parser.Get("section3", "s4", NULL) == "''");
+  assert(parser.Get("section3", "m1", NULL) == "\"");
+  assert(parser.Get("section3", "m2", NULL) == "'");
 }
 
 int main(int argc, char* argv[])
@@ -80,6 +94,7 @@ int main(int argc, char* argv[])
     test1();
     test2();
     test3();
+    test4();
 
     return 0;
 }

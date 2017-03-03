@@ -9,7 +9,7 @@ namespace qh
     class INIParser
     {
     public:
-        INIParser() {};
+        INIParser() :curSection("default") {};
         ~INIParser() {};
 
         //! \brief 解析一个磁盘上的INI文件
@@ -41,6 +41,7 @@ namespace qh
       static const size_t MaxLineLenght;
       std::unordered_map<std::string, std::unordered_map<std::string, std::string> > data_;
       std::string result;
+      std::string curSection;
 
       bool processLine(std::string &line, const std::string &key_value_seperator = "=");
     };
