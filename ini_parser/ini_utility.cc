@@ -10,6 +10,8 @@ namespace qh {
 		size_t pos = s.find_first_not_of(WhiteSpace);
 		if (pos != std::string::npos)
 			s.erase(0, pos);
+		else
+			s.erase(0, s.size());
 		pos = s.find_last_not_of(WhiteSpace);
 		if (pos != std::string::npos)
 			s.erase(pos + 1);

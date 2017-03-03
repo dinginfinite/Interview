@@ -58,6 +58,7 @@ void test3()
     assert(c == "3");
 }
 
+/* read from file */
 void test4() {
   qh::INIParser parser;
   if (!parser.Parse("example.ini")) {
@@ -87,6 +88,90 @@ void test4() {
   assert(parser.Get("section3", "m2", NULL) == "'");
 }
 
+void test5() {
+    //odd "|", should be considered as bad key
+    const char* ini_text= "||||a:1||b:2||||c:3|||||||";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "1");
+
+    std::string b = parser.Get("b", NULL);
+    assert(b == "2");
+
+    const std::string& c = parser.Get("c", NULL);
+    assert(c == "3");
+}
+
+void test6() {
+    //blanks
+    const char* ini_text= "    ||  ||a:1||b:2||||c:3|||||||";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "1");
+
+    std::string b = parser.Get("b", NULL);
+    assert(b == "2");
+
+    const std::string& c = parser.Get("c", NULL);
+    assert(c == "3");
+}
+
+void test7() {
+    // null pointer
+    const char* ini_text= "";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "");
+}
+
+void test8() {
+    // all blanks
+    const char* ini_text= "     ";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "");
+}
+
+void test9() {
+    // no key-value
+    const char* ini_text= "  ||   ";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "");
+}
+
+void test10() {
+    // only one pair
+    const char* ini_text= "a:1";
+    qh::INIParser parser;
+    if (!parser.Parse(ini_text, strlen(ini_text), "||", ":")) {
+        assert(true);
+    }
+
+    const std::string& a = parser.Get("a", NULL);
+    assert(a == "1");
+}
+
 int main(int argc, char* argv[])
 {
     //TODO 在这里添加单元测试，越多越好，代码路径覆盖率越全越好
@@ -95,6 +180,12 @@ int main(int argc, char* argv[])
     test2();
     test3();
     test4();
+    test5();
+    test6();
+    test7();
+    test8();
+    test9();
+    test10();
 
     return 0;
 }
