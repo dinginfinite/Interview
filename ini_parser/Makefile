@@ -1,16 +1,17 @@
+# weizili@360.cn
 
 CC=gcc
 CXX=g++
 CFLAGS= -g -c -D_DEBUG -fPIC -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings -Wsign-compare -Winvalid-pch -fms-extensions -Wall -MMD
-CPPFLAGS=$(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords 
+CPPFLAGS=$(CFLAGS) -Woverloaded-virtual -Wsign-promo -fno-gnu-keywords -std=c++11
 
 SRCS := $(wildcard *.cc)
 OBJS := $(patsubst %.cc, %.o, $(SRCS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 
-TARGET=unittest_vector
+TARGET=unittest_iniparser
 
-all : $(TARGET) 
+all : $(TARGET)
 
 check : $(TARGET)
 	./$^
@@ -22,5 +23,6 @@ $(TARGET) : $(OBJS)
 
 %.o : %.cc
 	$(CXX) $(CFLAGS) $(CPPFLAGS) $< -o $@
+
 clean :
 	rm -rf *.o *.d $(OBJS) $(DEPS) $(TARGET)
